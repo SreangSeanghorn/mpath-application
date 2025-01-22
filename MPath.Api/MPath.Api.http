@@ -1,0 +1,6 @@
+@MPath.Api_HostAddress = http://localhost:5063
+
+GET {{MPath.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
