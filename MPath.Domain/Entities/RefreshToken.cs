@@ -1,11 +1,13 @@
 
 
-using MPath.Domain.Core.Primitive;
+
+using MPath.SharedKernel.Primitive;
 
 namespace MPath.Domain.Entities
 {
     public class RefreshToken : Entity<Guid>
     {
+        public Guid Id { get; private set; }
         public string Token { get; private set; }
         public DateTime ExpiryDate { get; private set; }
         public bool IsRevoked { get; private set; }

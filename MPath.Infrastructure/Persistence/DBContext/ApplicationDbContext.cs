@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MPath.Domain;
-using MPath.Domain.Core.Event;
-using MPath.Domain.Core.Primitive;
 using MPath.Domain.Entities;
 using MPath.Infrastructure.Configuration;
+using MPath.SharedKernel.Event;
+using MPath.SharedKernel.Primitive;
 
 namespace MPath.Infrastructure.Persistence.DBContext;
     public class ApplicationDbContext : DbContext,IUnitOfWork
@@ -19,6 +19,7 @@ namespace MPath.Infrastructure.Persistence.DBContext;
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

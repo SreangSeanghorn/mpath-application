@@ -1,4 +1,4 @@
-namespace MPath.Domain.Core.Primitive
+namespace MPath.SharedKernel.Primitive
 {
     public interface IAggregateRoot
     {

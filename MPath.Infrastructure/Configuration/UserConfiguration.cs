@@ -10,10 +10,10 @@ namespace MPath.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).ValueGeneratedOnAdd().HasField("id");
-            builder.Property(e => e.UserName).HasField("username").IsRequired();
-            builder.Property(e => e.Password).IsRequired().HasField("password");
-            builder.OwnsOne(e => e.Email, email => { email.Property(e => e.Value).IsRequired().HasField("email"); });
+            builder.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("id");
+            builder.Property(e => e.UserName).HasColumnName("username").IsRequired();
+            builder.Property(e => e.Password).IsRequired().HasColumnName("password");
+            builder.OwnsOne(e => e.Email, email => { email.Property(e => e.Value).IsRequired().HasColumnName("email"); });
             builder.HasMany(e => e.Roles)
                       .WithMany(e => e.Users)
                         .UsingEntity<Dictionary<string, object>>(

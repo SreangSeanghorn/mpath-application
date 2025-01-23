@@ -1,15 +1,15 @@
 
-
-using Microsoft.AspNetCore.Identity;
-using MPath.Domain.Core.Primitive;
+using MPath.Domain.Core.Interfaces;
 using MPath.Domain.EventDatas;
 using MPath.Domain.Events;
 using MPath.Domain.ValueObjects;
+using MPath.SharedKernel.Primitive;
 
 namespace MPath.Domain.Entities
 {
     public class User : AggregateRoot<Guid>
     {
+        public Guid Id { get; private set; }
         public string UserName { get;  set; }
         public Email Email { get;  set; }
         public string Password { get;  set; }
@@ -25,16 +25,8 @@ namespace MPath.Domain.Entities
             Email = email;
             Password = password;
         }
-        private User(Guid id, string username, Email email, string password)
-        {
-            Id = id;
-            UserName = username;
-            Email = email;
-            Password = password;
-        }
         public static User Create(string userName, Email email, string password)
         {
-            password = new PasswordHasher<User>().HashPassword(null, password);
             return new User(userName, email, password);
         }
         public static User Register(string userName, Email email, string password,Role role)
@@ -43,15 +35,15 @@ namespace MPath.Domain.Entities
             user.AssignRole(role);
             var userRegisteredEventData = new UserRegisteredEventData(userName, email.Value, role.Id);
   
-            var userRegisteredEvent = new UserRegisteredEvent(user.Id, userRegisteredEventData);
+            var userRegisteredEvent = new UserRegisteredEvent(userRegisteredEventData);
             user.RaiseDomainEvents(userRegisteredEvent);
             return user;
         }
-        public bool VerifyPassword(string password)
+        public bool VerifyPassword(string password, IPasswordHasher passwordHasher)
         {
-            var passwordHasher = new PasswordHasher<User>();
-            return passwordHasher.VerifyHashedPassword(this, Password, password) == PasswordVerificationResult.Success;
+            return passwordHasher.VerifyPassword(Password, password);
         }
+    
 
 
         public void AssignRole(Role role)
@@ -63,7 +55,7 @@ namespace MPath.Domain.Entities
         public void RaiseRoleAssignedEvent(string role)
         {
             var roleAssignedData = new AssignRoleEventData(Id, role);
-            var roleAssignedEvent = new AssignedRoleEvent(Id, roleAssignedData);
+            var roleAssignedEvent = new AssignedRoleEvent(roleAssignedData);
             RaiseDomainEvents(roleAssignedEvent);
         }
 

@@ -1,6 +1,7 @@
 
 
-using MPath.Domain.Core.Primitive;
+
+using MPath.SharedKernel.Primitive;
 
 namespace MPath.Domain.Entities
 {

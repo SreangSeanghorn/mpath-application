@@ -1,9 +1,6 @@
+using MPath.SharedKernel.Event;
 
-
-
-using MPath.Domain.Core.Event;
-
-namespace MPath.Domain.Core.Primitive
+namespace MPath.SharedKernel.Primitive
 {
     public class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
     {

@@ -1,4 +1,4 @@
-namespace MPath.Domain.Core.Event
+namespace MPath.SharedKernel.Event
 {
     public interface IEventPublisher
     {
