@@ -17,15 +17,15 @@ namespace MPath.Infrastructure.Authentication.JwtTokenGenerator
         }
         public string GenerateToken(string username, List<string> roles)
         {
+            Console.WriteLine("Roles: " + string.Join(",", roles.Count));
             // create a claim based on the username
             var claims = new[]
             {
                new Claim(JwtRegisteredClaimNames.Sub, username),
                new Claim(ClaimTypes.Name, username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+               new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }
             .Union(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-            
             var signingKey = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret))
             , SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(

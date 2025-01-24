@@ -9,6 +9,7 @@ namespace MPath.Infrastructure.Persistence.DBContext;
     public class ApplicationDbContext : DbContext,IUnitOfWork
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Patient> Patients { get; set; }
         private readonly IEventPublisher _publisher;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IEventPublisher publisher) : base(options)
         {
@@ -20,6 +21,7 @@ namespace MPath.Infrastructure.Persistence.DBContext;
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+            modelBuilder.ApplyConfiguration(new PatientConfiguration());
         }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -31,7 +33,6 @@ namespace MPath.Infrastructure.Persistence.DBContext;
             .SelectMany(e =>
             {
                 var domainEvents = e.GetDomainEvents();
-
                 return domainEvents;
             })
             .ToList();
@@ -43,7 +44,6 @@ namespace MPath.Infrastructure.Persistence.DBContext;
             await _publisher.Publish(domainEvent);
 
         }
-
         return result;
     }
 

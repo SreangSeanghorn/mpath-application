@@ -2,6 +2,7 @@
 
 using System.Net;
 using System.Reflection;
+using MPath.Application.Exceptions.Roles;
 using MPath.Application.Shared.Exceptions;
 using Newtonsoft.Json;
 
@@ -47,7 +48,9 @@ namespace MPath.Api.Middleware
             var response = new
             {
                 StatusCode = statusCode,
-                Message = exception.Message,
+                Message = exception is ValidationException validationException
+                    ? validationException.CustomMessage
+                    : GetCustomMessageForException(exception),
                 Details = statusCode == (int)HttpStatusCode.InternalServerError
                     ? "There is an unexpected error occurred, please try again later."
                     : exception.Message
@@ -63,7 +66,7 @@ namespace MPath.Api.Middleware
 
             var response = new
             {
-                StatusCode = context.Response.StatusCode,
+                context.Response.StatusCode,
                 Message = "You are not authorized to access this resource.",
                 Details = "Please check your credentials and try again."
             };
@@ -81,7 +84,7 @@ namespace MPath.Api.Middleware
 
             return exception switch
             {
-              //  UserNotFoundException => (int)HttpStatusCode.NotFound,
+                RoleNotFoundException => (int)HttpStatusCode.NotFound,
                 UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
                 ArgumentException => (int)HttpStatusCode.BadRequest,
                 InvalidOperationException => (int)HttpStatusCode.Conflict,
@@ -93,7 +96,7 @@ namespace MPath.Api.Middleware
         {
             return exception switch
             {
-               // UserNotFoundException _ => "The specified user was not found.",
+                RoleNotFoundException _ => "The specified user was not found.",
                 UnauthorizedAccessException _ => "You do not have permission to access this resource.",
                 ArgumentException _ => "Invalid input provided. Please check your request.",
                 InvalidOperationException _ => "The operation is not valid at this time.",

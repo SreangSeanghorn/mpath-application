@@ -1,6 +1,7 @@
 using FluentValidation;
 using MPath.Application.Commands;
 using MPath.Application.Exceptions;
+using MPath.Application.Exceptions.Roles;
 using MPath.Application.Exceptions.UserRegistered;
 using MPath.Application.ResponsesDTOs;
 using MPath.Application.Shared.Responses;
@@ -34,19 +35,23 @@ public class UserRegisteredCommandHandler : ICommandHandler<UserRegisterCommand,
         var valid = _userRegisterCommandValidator.Validate(request);
         if (!valid.IsValid)
         {
-            throw new InvalidUserRegisterException(400, valid.Errors.First().ErrorMessage);
+            throw new InvalidUserRegisterException(valid.Errors.First().ErrorMessage);
         }
         var hashedPassword = _passwordHasher.HashPassword(request.Password);
-        var user = _userRepository.GetByEmail(request.Email);
+        var user = _userRepository.GetByEmail(request.Email).Result;
         if (user != null)
         {
             throw new UserAlreadyExistException(request.Email);
         }
         var role = await _roleRepository.GetByIdAsync(request.RoleId);
+        if (role == null)
+        {
+            throw new RoleNotFoundException();
+        }
         var providedMail = new Email(request.Email);
         var newUser =  User.Register(request.UserName, providedMail, hashedPassword, role);
         await _userRepository.AddAsync(newUser);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         var userRegisteredResponse = new UserRegisteredResponse(newUser.UserName, newUser.Email.Value);
         return new BaseResponse<UserRegisteredResponse>(true, 200, "", userRegisteredResponse);
     }

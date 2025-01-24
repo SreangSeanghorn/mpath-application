@@ -6,12 +6,12 @@ public class UserAlreadyExistException : ValidationException
 {
     public UserAlreadyExistException(string email)
     {
-        ErrorCode = 204;
+        StatusCode = 204;
         CustomMessage = $"User already exist - {email}";
     }
     
 
-    public override int ErrorCode { get; }
+    public override int StatusCode { get; }
     public override string CustomMessage { get; }
     
     

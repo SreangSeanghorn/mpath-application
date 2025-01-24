@@ -66,7 +66,7 @@ namespace MPath.Domain.Entities
 
         public void AddRefreshToken(RefreshToken refreshToken, DateTime expiryDate)
         {
-            RefreshTokens.Add(new RefreshToken(refreshToken.Token, expiryDate));
+            RefreshTokens.Add(RefreshToken.Create(refreshToken.Token, expiryDate));
         }
 
         public void RevokeRefreshToken(string token)

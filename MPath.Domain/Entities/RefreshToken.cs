@@ -13,11 +13,16 @@ namespace MPath.Domain.Entities
         public bool IsRevoked { get; private set; }
         public bool IsExpired => DateTime.UtcNow >= ExpiryDate;
 
-        public RefreshToken(string token, DateTime expiryDate)
+        private RefreshToken(string token, DateTime expiryDate)
         {
             Token = token ?? throw new ArgumentNullException(nameof(token));
             ExpiryDate = expiryDate;
             IsRevoked = false;
+        }
+        
+        public static RefreshToken Create(string token, DateTime expiryDate)
+        {
+            return new RefreshToken(token, expiryDate);
         }
 
         public void Revoke()

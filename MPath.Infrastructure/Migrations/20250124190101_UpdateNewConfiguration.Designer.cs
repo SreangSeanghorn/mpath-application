@@ -4,6 +4,7 @@ using MPath.Infrastructure.Persistence.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MPath.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250124190101_UpdateNewConfiguration")]
+    partial class UpdateNewConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,9 +79,12 @@ namespace MPath.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("patient_id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId");
+                    b.HasIndex("patient_id");
 
                     b.ToTable("Recommendation");
                 });
@@ -219,13 +225,11 @@ namespace MPath.Infrastructure.Migrations
 
             modelBuilder.Entity("MPath.Domain.Entities.Recommendation", b =>
                 {
-                    b.HasOne("MPath.Domain.Entities.Patient", "Patient")
+                    b.HasOne("MPath.Domain.Entities.Patient", null)
                         .WithMany("Recommendations")
-                        .HasForeignKey("PatientId")
+                        .HasForeignKey("patient_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("MPath.Domain.Entities.RefreshToken", b =>

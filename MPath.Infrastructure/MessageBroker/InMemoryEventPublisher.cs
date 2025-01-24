@@ -19,6 +19,7 @@ public class InMemoryEventPublisher : IEventPublisher
         foreach (var handler in handlers)
         {
             var method = handler.GetType().GetMethod("Handle");
+            Console.WriteLine("The Event is: " + @event.GetType().Name);       
             if (method != null)
             {
                 await (Task)method.Invoke(handler, new object[] { @event, CancellationToken.None });

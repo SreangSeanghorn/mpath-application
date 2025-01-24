@@ -12,9 +12,9 @@ namespace MPath.Infrastructure.Repositories
         {
         }
 
-        public Task<User> GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
-            return dbContext.Users.FirstOrDefaultAsync(x => x.Email.Value == email);
+            return await dbContext.Users.Include(u=>u.Roles).FirstOrDefaultAsync(x => x.Email.Value == email);
         }
     }
 }
