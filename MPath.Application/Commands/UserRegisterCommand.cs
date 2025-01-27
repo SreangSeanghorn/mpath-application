@@ -4,7 +4,7 @@ using MPath.SharedKernel.Primitive;
 
 namespace MPath.Application.Commands
 {
-    public class UserRegisterCommand : ICommand<BaseResponse<UserRegisteredResponse>>
+    public class UserRegisterCommand : ICommand<UserRegisteredResponse>
     {
         public UserRegisterCommand(string userName, string email, string password)
         {

@@ -35,9 +35,8 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.Property(p => p.BirthDate)
             .IsRequired()
             .HasColumnName("dob");
-
         builder.HasMany(p => p.Recommendations)
-            .WithOne(r=>r.Patient)
-            .HasForeignKey(r => r.PatientId);
+            .WithOne()
+            .HasForeignKey("patient_id");
     }
 }

@@ -4,7 +4,7 @@ using MPath.SharedKernel.Primitive;
 
 namespace MPath.Application.Commands
 {
-    public class UserLoginCommand: ICommand<BaseResponse<UserLoginResponseDto>>
+    public class UserLoginCommand: ICommand<UserLoginResponseDto>
     {
         public string Email { get; set; }
         public string Password { get; set; }

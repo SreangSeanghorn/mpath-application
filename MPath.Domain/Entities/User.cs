@@ -16,6 +16,8 @@ namespace MPath.Domain.Entities
          public ICollection<Role> Roles { get;  set; } = new List<Role>();
          public ICollection<RefreshToken> RefreshTokens { get;  set; } = new List<RefreshToken>();
 
+         public IEnumerable<Patient> Patients { get; private set; } = new List<Patient>();
+        
         private User()
         {
         }
@@ -34,7 +36,6 @@ namespace MPath.Domain.Entities
             var user = Create(userName, email, password);
             user.AssignRole(role);
             var userRegisteredEventData = new UserRegisteredEventData(userName, email.Value, role.Id);
-  
             var userRegisteredEvent = new UserRegisteredEvent(userRegisteredEventData);
             user.RaiseDomainEvents(userRegisteredEvent);
             return user;
@@ -43,8 +44,6 @@ namespace MPath.Domain.Entities
         {
             return passwordHasher.VerifyPassword(Password, password);
         }
-    
-
 
         public void AssignRole(Role role)
         {
@@ -78,7 +77,21 @@ namespace MPath.Domain.Entities
         {
             return RefreshTokens.SingleOrDefault(rt => rt.Token == token && rt.IsValid());
         }
-
+        
+        public Patient CreatePatient(string name, Email email ,  string phoneNumber,string address, DateTime dob)
+        {
+            var patient = Patient.Create(name, email, phoneNumber, address, dob);
+            ((List<Patient>)Patients).Add(patient);
+            var patientCreatedEventData = new CreatedPatientEventData(name, email.Value, phoneNumber, address, dob);
+            var patientCreatedEvent = new CreatedPatientEvent(patientCreatedEventData);
+            RaiseDomainEvents(patientCreatedEvent);
+            return patient;
+        }
+        public Recommendation CreateRecommendation(string title, string content, bool isCompleted)
+        {
+            var recommendation = Recommendation.Create(title, content, isCompleted);
+            return recommendation;
+        }
     }
     
 }

@@ -29,10 +29,9 @@ public class Patient : Entity<Guid>
     {
         return new Patient(name, email, phoneNumber, address, birthDate);
     }
-    
-    public void AddRecommendation(string title, string content, bool isCompleted)
+    public void AddRecommendation(Recommendation recommendation)
     {
-        Recommendations.Add(Recommendation.Create(this, title, content, isCompleted));
+        Recommendations.Add(recommendation);
     }
     
 }

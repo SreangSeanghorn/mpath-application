@@ -14,7 +14,7 @@ using MPath.SharedKernel.Primitive;
 
 namespace MPath.Application.CommandHandlers;
 
-public class UserRegisteredCommandHandler : ICommandHandler<UserRegisterCommand,BaseResponse<UserRegisteredResponse>>
+public class UserRegisteredCommandHandler : ICommandHandler<UserRegisterCommand,UserRegisteredResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -30,7 +30,7 @@ public class UserRegisteredCommandHandler : ICommandHandler<UserRegisterCommand,
         _roleRepository = roleRepository;
         _unitOfWork = unitOfWork;
     }
-    public async Task<BaseResponse<UserRegisteredResponse>> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
+    public async Task<UserRegisteredResponse> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
     {
         var valid = _userRegisterCommandValidator.Validate(request);
         if (!valid.IsValid)
@@ -53,6 +53,6 @@ public class UserRegisteredCommandHandler : ICommandHandler<UserRegisterCommand,
         await _userRepository.AddAsync(newUser);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         var userRegisteredResponse = new UserRegisteredResponse(newUser.UserName, newUser.Email.Value);
-        return new BaseResponse<UserRegisteredResponse>(true, 200, "", userRegisteredResponse);
+        return userRegisteredResponse;
     }
 }

@@ -20,12 +20,14 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IJwtRefreshTokenGenerator, JwtRefreshTokenGenerator>();
         services.AddScoped<IEventPublisher, InMemoryEventPublisher>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IPatientRepository, PatientRepository>();
         
         return services;
     }

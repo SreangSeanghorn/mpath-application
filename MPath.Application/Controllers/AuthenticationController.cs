@@ -24,14 +24,14 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterCommand request)
     {
-        var result = await _commandResolver.ResolveHandler<UserRegisterCommand,BaseResponse<UserRegisteredResponse>>(request); 
+        var result = await _commandResolver.ResolveHandler<UserRegisterCommand,UserRegisteredResponse>(request); 
         return Ok(result);
     }
     
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserLoginCommand request)
     {
-        var result = await _commandResolver.ResolveHandler<UserLoginCommand,BaseResponse<UserLoginResponseDto>>(request); 
+        var result = await _commandResolver.ResolveHandler<UserLoginCommand,UserLoginResponseDto>(request); 
         return Ok(result);
     }
     

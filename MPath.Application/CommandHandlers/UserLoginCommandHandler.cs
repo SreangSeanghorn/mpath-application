@@ -14,7 +14,7 @@ using MPath.SharedKernel.Primitive;
 
 namespace MPath.Application.CommandHandlers;
 
-public class UserLoginCommandHandler : ICommandHandler<UserLoginCommand,BaseResponse<UserLoginResponseDto>>
+public class UserLoginCommandHandler : ICommandHandler<UserLoginCommand,UserLoginResponseDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
@@ -32,7 +32,7 @@ public class UserLoginCommandHandler : ICommandHandler<UserLoginCommand,BaseResp
         _jwtRefreshTokenGenerator = jwtRefreshTokenGenerator;
         _passwordHasher = passwordHasher;
     }
-    public async Task<BaseResponse<UserLoginResponseDto>> Handle(UserLoginCommand request, CancellationToken cancellationToken)
+    public async Task<UserLoginResponseDto> Handle(UserLoginCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
@@ -51,6 +51,6 @@ public class UserLoginCommandHandler : ICommandHandler<UserLoginCommand,BaseResp
         user.AddRefreshToken(refreshTokenObj,DateTime.UtcNow.AddMinutes(30));
         await _userRepository.SaveChangesAsync();
         var userLoginResponse = new UserLoginResponseDto(token, refreshToken, DateTime.UtcNow.AddMinutes(30));
-        return new BaseResponse<UserLoginResponseDto>(true, 200, "", userLoginResponse);
+        return userLoginResponse;
     }
 }

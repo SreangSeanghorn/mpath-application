@@ -4,6 +4,7 @@ using MPath.Infrastructure.Persistence.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MPath.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250125131340_AddRecommendationConfiguration")]
+    partial class AddRecommendationConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,12 +54,7 @@ namespace MPath.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("phone_number");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Patients");
                 });
@@ -205,10 +203,6 @@ namespace MPath.Infrastructure.Migrations
 
             modelBuilder.Entity("MPath.Domain.Entities.Patient", b =>
                 {
-                    b.HasOne("MPath.Domain.Entities.User", null)
-                        .WithMany("Patients")
-                        .HasForeignKey("UserId");
-
                     b.OwnsOne("MPath.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("PatientId")
@@ -292,8 +286,6 @@ namespace MPath.Infrastructure.Migrations
 
             modelBuilder.Entity("MPath.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Patients");
-
                     b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
