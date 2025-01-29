@@ -31,4 +31,24 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
             var patients = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return (patients, totalPages);
     }
+
+    public async Task<(IEnumerable<Recommendation> Recommendations, int TotalPages)> GetRecommendationsByPatientId(Guid patientId, int page, int pageSize, string orderBy, string sortOrder,
+        string filterField, string filterValue)
+    {
+        var query = dbContext.Patients.Where(x => x.Id == patientId).SelectMany(x => x.Recommendations).AsQueryable();
+        if (!string.IsNullOrEmpty(filterField) && !string.IsNullOrEmpty(filterValue))
+        {
+            query = query.Where(x => EF.Property<string>(x, filterField).Contains(filterValue));
+        }
+        var totalRecommendations = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalRecommendations / (double)pageSize);
+        query = sortOrder.ToUpper() == "ASC" ? query.OrderBy(x => EF.Property<string>(x, orderBy)) : query.OrderByDescending(x => EF.Property<string>(x, orderBy));
+        var recommendations = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        return (recommendations, totalPages);
+    }
+
+    public async Task<Patient> GetPatientWithRecommendations(Guid patientId)
+    {
+        return await dbContext.Patients.Include(x => x.Recommendations).FirstOrDefaultAsync(x => x.Id == patientId);
+    }
 }

@@ -87,10 +87,16 @@ namespace MPath.Domain.Entities
             RaiseDomainEvents(patientCreatedEvent);
             return patient;
         }
-        public Recommendation CreateRecommendation(string title, string content, bool isCompleted)
+        public Recommendation CreateRecommendation(string title, string content, bool isCompleted,Guid PatientId)
         {
-            var recommendation = Recommendation.Create(title, content, isCompleted);
+            var recommendation = Recommendation.Create(title, content, isCompleted, Id);
+            var patient = Patients.FirstOrDefault(p => p.Id == PatientId);
+            patient.AddRecommendation(recommendation);
             return recommendation;
+        }
+        public void MarkRecommendationAsCompleted(Recommendation recommendation)
+        {
+            recommendation.MarkCompleted();
         }
     }
     

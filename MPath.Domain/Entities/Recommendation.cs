@@ -8,20 +8,22 @@ public class Recommendation : Entity<Guid>
     public string Title { get; private set; }
     public string Content { get; private set; }
     public bool IsCompleted { get; private set; }
+    
+    public Guid CreatedByUserId { get; private set; }
     private Recommendation()
     {
     }
 
-    private Recommendation(string title, string content, bool isCompleted)
+    private Recommendation(string title, string content, bool isCompleted, Guid createdByUserId)
     {
         Title = title;
         Content = content;
         IsCompleted = isCompleted;
     }
 
-    public static Recommendation Create(string title, string content, bool isCompleted)
+    public static Recommendation Create(string title, string content, bool isCompleted, Guid createdByUserId)
     {
-        return new Recommendation(title, content, isCompleted);
+        return new Recommendation(title, content, isCompleted, createdByUserId);
     }
     public void MarkCompleted()
     {

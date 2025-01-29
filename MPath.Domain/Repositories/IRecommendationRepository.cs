@@ -6,5 +6,4 @@ namespace MPath.Domain.Repositories;
 public interface IRecommendationRepository : IGenericRepository<Recommendation>
 {
     
-    
 }

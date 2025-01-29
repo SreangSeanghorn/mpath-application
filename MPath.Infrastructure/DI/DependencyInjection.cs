@@ -20,7 +20,6 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();

@@ -51,7 +51,7 @@ public class GetListOfPatientsQuery : IQuery<PaginationDto<IEnumerable<GetListOf
         return sortOrder;
     }
     
-    public string GetFilterFied()
+    public string GetFilterField()
     {
         var validFilter = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { 
             "Name", 
@@ -59,8 +59,18 @@ public class GetListOfPatientsQuery : IQuery<PaginationDto<IEnumerable<GetListOf
             "PhoneNumber",
             "Address",
             "DateOfBirth"
-        };
-       return validFilter.Contains(FilterField) ? FilterField : null;
+        }; 
+        string filterField = "Name";
+        if (!string.IsNullOrEmpty(FilterField))
+        {
+            if (!validFilter.Contains(FilterField))
+            {
+                throw new InvalidOperationException("Invalid FilterField field");
+            }
+            filterField = FilterField;
+        }
+
+        return filterField;
     }
     
 }
