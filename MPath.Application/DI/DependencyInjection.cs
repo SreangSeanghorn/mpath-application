@@ -44,6 +44,11 @@ public static class DependencyInjection
             .AddScoped<ICommandHandler<CreateRecommendationCommand, CreateRecommendationCommandResponseDto>,
                 CreateRecommendationCommandHandler>();
         services.AddScoped<IValidator<CreateRecommendationCommand>, CreateRecommendationCommandValidator>();
+
+        services
+            .AddScoped<ICommandHandler<MarkRecommendationAsCompletedCommand, bool>,
+                MarkRecommendationAsCompletedCommandHandler>();
+        services.AddScoped<IValidator<MarkRecommendationAsCompletedCommand>, MarkRecommendationAsCompletedCommandValidator>();
         return services;
     }
 }

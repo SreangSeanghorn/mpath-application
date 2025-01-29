@@ -3,7 +3,6 @@ using MPath.SharedKernel.Primitive;
 
 namespace MPath.Application.Queries.Patients;
 
-public record GetPatientDetailByIdQuery : IQuery<PatientDetailResponseDto>
+public record GetPatientDetailByIdQuery (Guid Id): IQuery<PatientDetailResponseDto>
 {
-    public Guid Id { get; init; }
 }

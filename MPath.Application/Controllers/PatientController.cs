@@ -79,4 +79,31 @@ public class PatientController : ControllerBase
             ));
         }
     }
+    //GetPatientDetails
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPatientDetails(Guid id)
+    {
+        try
+        {
+            var query = new GetPatientDetailByIdQuery(
+                id
+            );
+            var result = await _queryResolver.ResolveHandler<GetPatientDetailByIdQuery, PatientDetailResponseDto>(query);
+            return Ok(new BaseResponse<PatientDetailResponseDto>(
+                true,
+                200,
+                "Patient details",
+                result
+            ));
+        }
+        catch (Exception e)
+        {
+            return Ok(new BaseResponse<string>(
+                false,
+                (int) HttpStatusCode.InternalServerError,
+                e.Message,
+                null
+            ));
+        }
+    }
 }

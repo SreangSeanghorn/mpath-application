@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IEventPublisher, InMemoryEventPublisher>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         
         return services;
     }

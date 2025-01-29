@@ -33,7 +33,7 @@ public class CreateRecommendationCommandHandler : ICommandHandler<CreateRecommen
         {
             throw new InvalidInputForCreateRecommendationException(validationResult.Errors.First().ErrorMessage);
         }
-        var user = await _userRepository.GetByIdAsync(request.UserId);
+        var user = await _userRepository.GetUserWithPatient(request.UserId);
         if (user == null)
         {
             throw new UserNotFoundException("User not found");

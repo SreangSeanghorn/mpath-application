@@ -16,7 +16,7 @@ namespace MPath.Domain.Entities
          public ICollection<Role> Roles { get;  set; } = new List<Role>();
          public ICollection<RefreshToken> RefreshTokens { get;  set; } = new List<RefreshToken>();
 
-         public IEnumerable<Patient> Patients { get; private set; } = new List<Patient>();
+         public ICollection<Patient> Patients { get; private set; } = new List<Patient>();
         
         private User()
         {
@@ -90,8 +90,9 @@ namespace MPath.Domain.Entities
         public Recommendation CreateRecommendation(string title, string content, bool isCompleted,Guid PatientId)
         {
             var recommendation = Recommendation.Create(title, content, isCompleted, Id);
+            Console.WriteLine("PatientId: "+Patients.Count);
             var patient = Patients.FirstOrDefault(p => p.Id == PatientId);
-            patient.AddRecommendation(recommendation);
+            if (patient != null) patient.AddRecommendation(recommendation);
             return recommendation;
         }
         public void MarkRecommendationAsCompleted(Recommendation recommendation)
