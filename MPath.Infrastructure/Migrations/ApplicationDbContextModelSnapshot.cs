@@ -118,12 +118,7 @@ namespace MPath.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("token");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("RefreshToken");
                 });
@@ -182,12 +177,17 @@ namespace MPath.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("password");
 
+                    b.Property<Guid?>("RefreshTokenId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("username");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RefreshTokenId");
 
                     b.ToTable("Users");
                 });
@@ -243,15 +243,12 @@ namespace MPath.Infrastructure.Migrations
                         .HasForeignKey("patient_id");
                 });
 
-            modelBuilder.Entity("MPath.Domain.Entities.RefreshToken", b =>
-                {
-                    b.HasOne("MPath.Domain.Entities.User", null)
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("MPath.Domain.Entities.User", b =>
                 {
+                    b.HasOne("MPath.Domain.Entities.RefreshToken", "RefreshToken")
+                        .WithMany()
+                        .HasForeignKey("RefreshTokenId");
+
                     b.OwnsOne("MPath.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -272,6 +269,8 @@ namespace MPath.Infrastructure.Migrations
 
                     b.Navigation("Email")
                         .IsRequired();
+
+                    b.Navigation("RefreshToken");
                 });
 
             modelBuilder.Entity("UserRole", b =>
@@ -297,8 +296,6 @@ namespace MPath.Infrastructure.Migrations
             modelBuilder.Entity("MPath.Domain.Entities.User", b =>
                 {
                     b.Navigation("Patients");
-
-                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

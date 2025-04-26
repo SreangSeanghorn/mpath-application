@@ -21,5 +21,10 @@ namespace MPath.Infrastructure.Repositories
         {
             return await dbContext.Users.Include(u => u.Patients).FirstOrDefaultAsync(x => x.Id == userId);
         }
+
+        public Task<User?> GetUserByRefreshTokenAsync(string token)
+        {
+            return dbContext.Users.Include(u => u.RefreshToken).FirstOrDefaultAsync(x => x.RefreshToken.Token == token);
+        }
     }
 }

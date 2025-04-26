@@ -7,4 +7,5 @@ public interface IUserRepository : IGenericRepository<User>
 {
     public Task<User?> GetByEmail(string email);
     public Task<User?> GetUserWithPatient(Guid userId);
+    public Task<User?> GetUserByRefreshTokenAsync(string token);
 }

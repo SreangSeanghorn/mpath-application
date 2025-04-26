@@ -15,6 +15,7 @@ using MPath.Application.Validators;
 using MPath.Application.Validators.Patients;
 using MPath.Application.Validators.Recommendations;
 using MPath.Application.Validators.UserLogin;
+using MPath.Application.Validators.UserRefreshedToken;
 using MPath.Application.Validators.UserRegistered;
 using MPath.SharedKernel.Primitive;
 
@@ -49,6 +50,8 @@ public static class DependencyInjection
             .AddScoped<ICommandHandler<MarkRecommendationAsCompletedCommand, bool>,
                 MarkRecommendationAsCompletedCommandHandler>();
         services.AddScoped<IValidator<MarkRecommendationAsCompletedCommand>, MarkRecommendationAsCompletedCommandValidator>();
+        services.AddScoped<IValidator<UserRefreshTokenCommand>,UserRefreshTokenCommandValidator>();
+        services.AddScoped<ICommandHandler<UserRefreshTokenCommand, UserRefreshTokenResponseDto>,UserRefreshTokenCommandHandler>();
         return services;
     }
 }

@@ -27,12 +27,9 @@ namespace MPath.Api.Middleware
             }
             catch (Exception ex)
             {
-                // Log the exception
                 _logger.LogError($"An error occurred: {ex}");
                 await HandleExceptionAsync(httpContext, ex);
             }
-
-            // Optionally handle any response status code checks after the request is processed
             if (httpContext.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
                 await HandleUnauthorizedResponseAsync(httpContext);

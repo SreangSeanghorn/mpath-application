@@ -48,7 +48,7 @@ public class UserLoginCommandHandler : ICommandHandler<UserLoginCommand,UserLogi
         var token = _jwtTokenGenerator.GenerateToken(user.Email.Value, roles);
         var refreshToken = _jwtRefreshTokenGenerator.GenerateRefreshToken();
         var refreshTokenObj = RefreshToken.Create(refreshToken, _jwtRefreshTokenGenerator.GetExpiryDate());
-        user.AddRefreshToken(refreshTokenObj,DateTime.UtcNow.AddMinutes(30));
+        user.SetRefreshToken(refreshTokenObj.Token, refreshTokenObj.ExpiryDate);
         await _userRepository.SaveChangesAsync();
         var userLoginResponse = new UserLoginResponseDto(token, refreshToken, DateTime.UtcNow.AddMinutes(30));
         return userLoginResponse;

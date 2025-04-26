@@ -19,6 +19,7 @@ public class Recommendation : Entity<Guid>
         Title = title;
         Content = content;
         IsCompleted = isCompleted;
+        CreatedByUserId = createdByUserId;
     }
 
     public static Recommendation Create(string title, string content, bool isCompleted, Guid createdByUserId)

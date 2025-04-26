@@ -38,7 +38,7 @@ public class CreateRecommendationCommandHandler : ICommandHandler<CreateRecommen
         {
             throw new UserNotFoundException("User not found");
         }
-        var patient = _patientRepository.GetByIdAsync(request.PatientId);
+        var patient = await _patientRepository.GetByIdAsync(request.PatientId);
         if (patient == null)
         {
             throw new PatientWithProvidedIdNotFoundException("Patient not found");

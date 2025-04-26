@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MPath.Application.Commands;
 using MPath.Application.Queries.Patients;
@@ -22,6 +23,7 @@ public class PatientController : ControllerBase
     }
     
     [HttpGet("get-list")]
+    [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> GetListOfPatients([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? orderBy, [FromQuery] string? sortOrder, [FromQuery] string? filterField, [FromQuery] string? filterValue)
     {
         try
@@ -57,6 +59,7 @@ public class PatientController : ControllerBase
     }
     
     [HttpPost("create")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreatePatient([FromBody] CreatePatientCommand request)
     {
         try
@@ -79,8 +82,8 @@ public class PatientController : ControllerBase
             ));
         }
     }
-    //GetPatientDetails
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetPatientDetails(Guid id)
     {
         try

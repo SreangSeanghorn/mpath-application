@@ -14,7 +14,7 @@ namespace MPath.Domain.Entities
         public Email Email { get;  set; }
         public string Password { get;  set; }
          public ICollection<Role> Roles { get;  set; } = new List<Role>();
-         public ICollection<RefreshToken> RefreshTokens { get;  set; } = new List<RefreshToken>();
+         public RefreshToken? RefreshToken { get;  set; } 
 
          public ICollection<Patient> Patients { get; private set; } = new List<Patient>();
         
@@ -62,21 +62,22 @@ namespace MPath.Domain.Entities
         {
             return Roles.Select(r => r.Name).ToList();
         }
+        
 
-        public void AddRefreshToken(RefreshToken refreshToken, DateTime expiryDate)
+        public void SetRefreshToken(string token, DateTime expiryDate)
         {
-            RefreshTokens.Add(RefreshToken.Create(refreshToken.Token, expiryDate));
+            RefreshToken = RefreshToken.Create(token, expiryDate);
         }
 
-        public void RevokeRefreshToken(string token)
+        public void RevokeRefreshToken()
         {
-            var refreshToken = RefreshTokens.SingleOrDefault(rt => rt.Token == token);
-            if (refreshToken != null) refreshToken.Revoke();
+            RefreshToken?.Revoke();
         }
-        public RefreshToken GetValidRefreshToken(string token)
+
+        public bool HasValidRefreshToken(string token)
         {
-            return RefreshTokens.SingleOrDefault(rt => rt.Token == token && rt.IsValid());
-        }
+            return RefreshToken?.Token == token && RefreshToken?.IsValid() == true;
+        }  
         
         public Patient CreatePatient(string name, Email email ,  string phoneNumber,string address, DateTime dob)
         {
@@ -90,7 +91,6 @@ namespace MPath.Domain.Entities
         public Recommendation CreateRecommendation(string title, string content, bool isCompleted,Guid PatientId)
         {
             var recommendation = Recommendation.Create(title, content, isCompleted, Id);
-            Console.WriteLine("PatientId: "+Patients.Count);
             var patient = Patients.FirstOrDefault(p => p.Id == PatientId);
             if (patient != null) patient.AddRecommendation(recommendation);
             return recommendation;
