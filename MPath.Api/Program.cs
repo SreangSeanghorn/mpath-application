@@ -75,9 +75,28 @@ builder.Services.AddCors(
                     ;
             });
     });
+
+// builder.WebHost.ConfigureKestrel(options =>
+// {
+//     options.ListenAnyIP(80); // HTTP
+//     options.ListenAnyIP(443, listenOptions =>
+//     {
+//         listenOptions.UseHttps(); // HTTPS
+//     });
+// });
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() ||
+    app.Environment.IsEnvironment("Docker") ||
+    app.Environment.IsEnvironment("DockerDevelopment") ||
+    app.Environment.IsProduction())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseHsts();
+}
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -88,4 +107,6 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
+
+app.Urls.Add("http://0.0.0.0:80");
 app.Run();
